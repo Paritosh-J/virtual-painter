@@ -6,19 +6,19 @@ import handDetectionModule as hdm
 def main():
     # importing pallete images
     
-    folderPath = './pallete'
+    folderPath = 'C:/Coding Stuff/Python/Python AI/Advance CV/Projects/Virtual Painter/pallet'
     picList = os.listdir(folderPath)
     overlayList = []
     imgHeight, imgWidth = 125, 1280
     for imgpath in picList:
         img = cv2.imread(f'{folderPath}/{imgpath}')
         overlayList.append(img)
-    palleteHeader = overlayList[0]
+    palletHeader = overlayList[0]
 
     # color and eraser variables
     color = (0, 0, 255)
     colorThickness = 15
-    eraserThickness = 80
+    eraserThickness = 100
 
     # frame varaibles
     drawFrame = np.zeros((720, 1280, 3), np.uint8) # unint8 - unsigned 8 bit values from 0 to 255
@@ -52,19 +52,19 @@ def main():
             # selection mode - index and middle fingers up
             if upFinger[1] and upFinger[2]:
                 xPrev, yPrev = 0, 0
-                # selecting color from pallete
+                # selecting color from pallet
                 if y1 < 140:
                     if 250 < x1 < 450:  # red
-                        palleteHeader = overlayList[0]
+                        palletHeader = overlayList[0]
                         color = (0, 0, 255)
                     elif 550 < x1 < 750: # blue
-                        palleteHeader = overlayList[1]
+                        palletHeader = overlayList[1]
                         color = (255, 0, 0)
                     elif 800 < x1 < 950: # green
-                        palleteHeader = overlayList[2]
+                        palletHeader = overlayList[2]
                         color = (0, 255, 0)
                     elif 1050 < x1 < 1200: # eraser
-                        palleteHeader = overlayList[3]
+                        palletHeader = overlayList[3]
                         color = (0, 0, 0)
                 cv2.rectangle(frame, (x1, y1 - 25), (x2, y2 + 25), color, cv2.FILLED)
 
@@ -87,21 +87,26 @@ def main():
                 # update coordinate
                 xPrev, yPrev = x1, y1
 
+        if cv2.waitKey(1) == ord('c'):
+            drawFrame[:] = (0, 0, 0)
+
         grayImg = cv2.cvtColor(drawFrame, cv2.COLOR_BGR2GRAY) # convert frame into grayscale image
         x, inverseImg = cv2.threshold(grayImg, 50, 255, cv2.THRESH_BINARY_INV)  # convert into inverse image
         inverseImg = cv2.cvtColor(inverseImg, cv2.COLOR_GRAY2BGR) # convert grayscale image back to colored image
         frame = cv2.bitwise_and(frame, inverseImg)  # add inverse image frame to main frame
         frame = cv2.bitwise_or(frame, drawFrame)    # combine color frame with current frame (inverseImge + main frame)
 
-        # set pallete image
-        frame[0:imgHeight, 0:imgWidth] = palleteHeader
-        
+        # set pallet image
+        frame[0:imgHeight, 0:imgWidth] = palletHeader
+
+        cv2.putText(frame, "Press 'c' to clear screen", (20, 670), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
         cv2.putText(frame, "Press 'q' to exit", (20, 700), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
         cv2.imshow('=== Virtual Painter ===', frame)  # open window for showing the o/p
 
         # escape key
         if cv2.waitKey(1) == ord('q'):
             break
+
 
     # release the captured video and distroy all windows
     video.release()
