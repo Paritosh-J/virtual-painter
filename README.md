@@ -10,7 +10,7 @@ An AI-based virtual painter that can be used to draw on screen with RGB colors.
 
 ## How to install
 * Install Python 3 in you system from https://www.python.org/.
-* Install the following libraries using the command : **pip install _packageName_**
+* Install the following libraries / packages using the command : **pip install _packageName_**
   1. cv2
   2. mediapipe
   3. math
