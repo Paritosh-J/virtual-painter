@@ -6,7 +6,7 @@ import handDetectionModule as hdm
 def main():
     # importing pallete images
     
-    folderPath = 'C:/Coding Stuff/Python/Python AI/Advance CV/Projects/Virtual Painter/pallete'
+    folderPath = './pallete'
     picList = os.listdir(folderPath)
     overlayList = []
     imgHeight, imgWidth = 125, 1280
